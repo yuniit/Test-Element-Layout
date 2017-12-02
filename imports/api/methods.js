@@ -73,7 +73,7 @@ Meteor.methods({
     },
     // End Insert Methods
 
-    // Start Remove Methodss
+    // Start Remove Methods
     removeCustomer(_id) {
         Meteor._sleepForMs(1500)
         return Customer.remove({ _id: _id })
