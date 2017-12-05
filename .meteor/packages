@@ -22,3 +22,5 @@ shell-server@0.3.0            # Server-side component of the `meteor shell` comm
 akryum:vue-component
 meteorhacks:aggregate
 momentjs:moment
+fortawesome:fontawesome
+planettraining:material-design-icons-font

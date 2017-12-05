@@ -58,6 +58,16 @@ Meteor.methods({
     },
     // End Find || Call Methods
 
+    // Start Update Methods
+    findOneCustomer(_id) {
+        return Customer.findOne({ _id: _id });
+    },
+    updateCustomer(_id, data) {
+        Meteor._sleepForMs(1500);
+        return Customer.update({ _id: _id }, { $set: data });
+    },
+    // End Update Methods
+
     // Start Insert Methods
     insertCustomers(data) {
         Meteor._sleepForMs(1500)

@@ -3,7 +3,7 @@
         <div class="layout">
             <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" style="padding:0 40px;height:63px;">
                 <el-row :gutter="20">
-                    <el-col :span="4">
+                    <el-col :span="5">
                         <div style="padding-top:4px;">
                             <a href="#">
                                 <img src="Automoto Logo.png" width="135px;" style="border:1px solid #FB8C00;">
@@ -11,9 +11,14 @@
                         </div>
                     </el-col>
                     <el-col :span="10">
-                        <i class="el-icon-search search-icon"></i>
+                        <div class="search-div">
+                            <el-input type="text" v-model="searchIput" size="small" style="width:300px;"></el-input>
+                            <el-button type="info" @click="openSearch()" v-loading.body="loadingSearch" size="small" plain style="width:40px;margin-left:5px;">
+                                <i class="el-icon-search"></i>
+                            </el-button>
+                        </div>
                     </el-col>
-                    <el-col :span="10" style="float:right">
+                    <el-col :span="9" style="float:right">
                         <el-menu-item index="3" class="nav-link">Do</el-menu-item>
                         <el-menu-item index="4" class="nav-link">Grow</el-menu-item>
                         <el-submenu index="2" class="nav-link">
@@ -68,7 +73,8 @@
                                     </el-form-item>
                                 </el-col>
                             </el-row>
-                            <el-button type="primary" v-loading="loadingAddCustomer" @click="handleAddCustomer()" style="margin-left:110px;">Submit</el-button>
+                            <el-button type="primary" v-loading="loadingAddCustomer" @click="handleAddCustomer()" style="margin-left:110px;">Insert</el-button>
+                            <el-button type="info" v-loading="loadingUpdateCustomer" @click="updateCustomer()">Update</el-button>
                             <el-button plain type="warning" @click="resetCustomerForm()" style="float:right;">Reset</el-button>
                         </el-form>
                     </el-col>
@@ -79,21 +85,26 @@
                 <el-row :gutter="20" style="margin-bottom:20px;">
                     <el-col :span="22" :offset="1">
                         <el-table :data="customerData" v-loading.body="loadingCustomerTable" border style="width:100%">
-                            <el-table-column label="Name" prop="name" width="170">
+                            <el-table-column label="Name" prop="name" width="140">
                             </el-table-column>
-                            <el-table-column label="Gender" prop="gender" width="120">
+                            <el-table-column label="Gender" prop="gender" width="110">
                             </el-table-column>
-                            <el-table-column label="Birthday" prop="dob" width="150" :formatter="dateFormat">
+                            <el-table-column label="Birthday" prop="dob" width="140" :formatter="dateFormat">
                             </el-table-column>
                             <el-table-column label="Email" prop="email" width="220">
                             </el-table-column>
                             <el-table-column label="Address" prop="address" width="248">
                             </el-table-column>
-                            <el-table-column label="Tel" prop="tel" width="160">
+                            <el-table-column label="Tel" prop="tel" width="135">
                             </el-table-column>
-                            <el-table-column label="Remove" width="95">
+                            <el-table-column label="Edite" width="80">
                                 <template slot-scope="scope">
-                                    <el-button type="danger" @click="handleRemoveCustomer(scope.row)" size="small" plain>Remove</el-button>
+                                    <el-button type="info" @click="findOneCustomer(scope.row)" size="small" plain>Edite</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="Remove" width="90">
+                                <template slot-scope="scope">
+                                    <el-button type="danger" @click="handleRemoveCustomer(scope.row)" size="small">Remove</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -106,7 +117,7 @@
                 <h2 class="heading center-text">Item Form</h2>
                 <el-row :gutter="20" style="margin:20px 0;">
                     <el-col :span="14" :offset="5">
-                        <el-form :model="itemForm" ref="itemForm" :rules="itemRule" label-width="120px">
+                        <el-form :model="itemForm" ref="itemForm" :rules="itemRule" label-width="126px">
                             <el-row :gutter="20">
                                 <el-col :span="12">
                                     <el-form-item label="Name :" prop="name">
@@ -136,7 +147,7 @@
                                 <el-col :span="12">
                                     <el-form-item label="Date Instock :" prop="dateInStock">
                                         <el-date-picker v-model="itemForm.dateInStock" type="date" placeholder="Date items arrive stock">
-                                            </el-date-pickerf>
+                                        </el-date-picker>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="12">
@@ -146,7 +157,8 @@
                                     </el-form-item>
                                 </el-col>
                             </el-row>
-                            <el-button type="primary" @click="handleAddItem()" v-loading="loadingAddItem" style="margin-left:120px;">Submit</el-button>
+                            <el-button type="primary" @click="handleAddItem()" v-loading="loadingAddItem" style="margin-left:120px;">Insert</el-button>
+                            <el-button type="warning" @click="resetItemForm()" plain style="float:right">Reset</el-button>
                         </el-form>
                     </el-col>
                 </el-row>
@@ -198,7 +210,8 @@
                                     </el-form-item>
                                 </el-col>
                             </el-row>
-                            <el-button type="primary" @click="handleAddSale()" v-loading="loadingAddSale" style="margin-left:125px;">Submit</el-button>
+                            <el-button type="primary" @click="handleAddSale()" v-loading="loadingAddSale" style="margin-left:125px;">Insert</el-button>
+                            <el-button type="warning" @click="resetSaleForm()" plain style="float:right">Reset</el-button>
                         </el-form>
                     </el-col>
                 </el-row>
@@ -221,7 +234,7 @@
                             <el-table-column label="Amout Price" prop="amountPrice" width="170" :formatter="priceFormat">
                             </el-table-column>
                             <el-table-column label="Remove" width="106">
-                                <template scope="scope">
+                                <template slot-scope="scope">
                                     <el-button type="danger" @click="handleRemoveSale(scope.row)" size="small" plain>Remove</el-button>
                                 </template>
                             </el-table-column>
@@ -245,17 +258,19 @@ export default {
     name: 'app',
     data() {
         return {
-
+            searchIput: '',
             readonly: true,
             activeIndex: '1',
             activeIndex2: '1',
 
             // All Loading 
+            loadingUpdateCustomer: false,
             loadingAddCustomer: false,
             loadingCustomerTable: false,
             loadingAddItem: false,
             loadingAddSale: false,
             loadingSaleTable: false,
+            loadingSearch: false,
             // End All Loading 
 
             // Customer Form Value
@@ -312,7 +327,22 @@ export default {
             itemRule: {
                 name: [
                     { required: true, message: '' }
-                ]
+                ],
+                price: [
+                    { required: true, message: '' }
+                ],
+                cate: [
+                    { required: true, message: '' }
+                ],
+                dateInStock: [
+                    { required: true, message: '' }
+                ],
+                instockQuantity: [
+                    { required: true, message: '' }
+                ],
+                amountPrice: [
+                    { required: true, message: '' }
+                ],
             },
             cateOpt: [
                 {
@@ -347,7 +377,19 @@ export default {
                 ],
                 itemName: [
                     { required: true, message: '' }
-                ]
+                ],
+                itemPrice: [
+                    { required: true, message: '' }
+                ],
+                saleQuantity: [
+                    { required: true, message: '' }
+                ],
+                dateOutStock: [
+                    { required: true, message: '' }
+                ],
+                amountPrice: [
+                    { required: true, message: '' }
+                ],
             }
             // End Sale Form Value
         }
@@ -409,6 +451,37 @@ export default {
         },
         // End Call || Find methods
 
+        findOneCustomer(row) {
+            Meteor.call('findOneCustomer', row._id, (err, res) => {
+                this.customerForm._id = res._id;
+                this.customerForm.name = res.name;
+                this.customerForm.gender = res.gender;
+                this.customerForm.dob = res.dob;
+                this.customerForm.email = res.email;
+                this.customerForm.address = res.address;
+                this.customerForm.tel = res.tel;
+            })
+        },
+        updateCustomer() {
+            let id = this.customerForm._id;
+            let data = {
+                name: this.customerForm.name,
+                gender: this.customerForm.gender,
+                dob: this.customerForm.dob,
+                email: this.customerForm.email,
+                address: this.customerForm.address,
+                tel: this.customerForm.tel
+            }
+            this.loadingUpdateCustomer = true;
+            Meteor.call('updateCustomer', id, data, (err, res) => {
+                if (!err) {
+                    this.callCustomer();
+                    this.resetCustomerForm();
+                    this.loadingUpdateCustomer = false;
+                    this.$message.success({ message: 'Customer update completed .' })
+                }
+            })
+        },
         // Start Insert Methods
         handleAddCustomer() {
             let data = {
@@ -500,7 +573,8 @@ export default {
             this.$confirm('This also remove from database , Are you sure?', 'Warning', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
-                type: 'waning'
+                type: 'waning',
+                center: true
             })
                 .then(() => {
                     this.loadingCustomerTable = true;
@@ -520,7 +594,8 @@ export default {
             this.$confirm('This also remove from database , Are you sure?', 'Warning', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
-                type: 'waning'
+                type: 'waning',
+                center: true
             })
                 .then(() => {
                     this.loadingSaleTable = true;
@@ -551,6 +626,38 @@ export default {
         // End Reset Form Methods
 
         // Start etc Methods ....
+        openSearch() {
+            if (this.searchIput == 0) {
+                this.$message.error({ message: 'Sever 404 not found !!!', duration: 1500, })
+            }
+            else {
+                const h = this.$createElement;
+                this.$msgbox({
+                    title: 'Please wait',
+                    message: h('p', null, [
+                        h('i', { class: 'material-icons fa-spin my-search-loading' }, 'filter_vintage'),
+                        h('p', { style: 'margin-left:90px;margin-top:10px;font-size:18px;' }, 'Progress is in loading ...')
+                    ]),
+                    showCancelButton: false,
+                    confirmButtonText: 'Close',
+                    cancelButtonText: 'Cancel',
+                    beforeClose: (action, instance, done) => {
+                        if (action === 'confirm') {
+                            done();
+                        }
+                    }
+                }).then(action => {
+                    setTimeout(() => {
+                        this.searchIput = '';
+                        this.$message({
+                            message: 'Please try again later .',
+                            type: 'info',
+                            duration: 1500,
+                        })
+                    }, 700);
+                })
+            }
+        },
         dateFormat: (row, column) => {
             var date = row[column.property];
             if (date == undefined) {
@@ -635,42 +742,16 @@ export default {
 
 .el-button--primary {
     background-color: #FB8C00;
+    border-color: #FFCC80;
 }
 
+.el-button--info:hover {
+    border-color: #FB8C00;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.el-input__inner:focus {
+    border-color: #FB8C00 !important;
+}
 
 
 
@@ -687,25 +768,22 @@ export default {
 
 /* My own css costumize */
 
+.search-div {
+    width: auto;
+    height: 50px;
+    padding-top: 17px;
+    padding-left: 90px;
+}
+
+.my-search-loading {
+    margin-left: 40%;
+    color: #FB8C00;
+    font-size: 60px;
+}
+
 .nav-link {
     font-family: Arial, sans-serif;
     font-weight: 600;
-}
-
-.search-icon {
-    float: right;
-    line-height: 55px;
-    margin-right: 50px;
-    font-size: 30px;
-    color: #455A64;
-    border-bottom: 5px solid transparent;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-.search-icon:hover {
-    cursor: pointer;
-    background-color: #eef1f6;
 }
 
 .el-menu--horizontal .nav-link {
